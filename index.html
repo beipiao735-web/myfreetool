@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>我的免费工具导航 — myfreetool.eu.cc</title>
+    <meta name="description" content="个人收藏夹导航：免费 API、AI 对话、API 中转与常用工具，一个页面全找到。" />
+    <style>
+      * { box-sizing: border-box; }
+      :root{
+        --bg:#f2f4f1; --surface:#ffffff; --surface-2:#f7f8f6;
+        --ink:#131c18; --ink-2:#44524b; --ink-3:#718078; --line:#dde3dd;
+        --teal:#0c6b57; --teal-deep:#0a4f40;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{ --bg:#101613; --surface:#182019; --surface-2:#1f2a22; --ink:#e8efe9; --ink-2:#b6c4b9; --ink-3:#8ba093; --line:#2b3a2f; }
+      }
+      body{ margin:0; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
+      .wrap{ max-width:960px; margin:0 auto; padding:28px 18px 60px; }
+      header h1{ margin:0; font-size:26px; letter-spacing:.5px; }
+      header p{ color:var(--ink-2); margin:8px 0 0; line-height:1.6; }
+      .search{ margin:20px 0 12px; }
+      .search input{
+        width:100%; padding:12px 14px; font-size:16px; border:1px solid var(--line);
+        border-radius:10px; background:var(--surface); color:var(--ink); outline:none;
+      }
+      .search input:focus{ border-color:var(--teal); }
+      .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 20px; }
+      .chips button{
+        padding:7px 14px; border:1px solid var(--line); border-radius:999px;
+        background:var(--surface); color:var(--ink-2); font-size:14px; cursor:pointer;
+      }
+      .chips button.on{ background:var(--teal); border-color:var(--teal); color:#fff; }
+      h2{ font-size:18px; margin:28px 0 12px; }
+      h2 small{ color:var(--ink-3); font-weight:400; margin-left:6px; }
+      .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
+      .card{
+        display:block; padding:14px 16px; border:1px solid var(--line); border-radius:12px;
+        background:var(--surface); color:var(--ink); text-decoration:none;
+      }
+      .card:hover{ border-color:var(--teal); }
+      .card b{ font-size:16px; }
+      .card .d{ display:block; font-size:13px; color:var(--ink-2); margin-top:4px; line-height:1.5; }
+      .card .u{ display:block; font-size:12px; color:var(--ink-3); margin-top:6px; }
+      .hidden{ display:none !important; }
+      footer{ margin-top:44px; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-3); font-size:13px; line-height:1.7; }
+      footer a{ color:var(--teal); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>🧰 我的免费工具导航</h1>
+        <p>浏览器收藏夹的网页版：免费 API、AI 对话、API 中转、代充与常用站点都在这。点卡片直达，右上角搜名字也能找。</p>
+      </header>
+
+      <div class="search"><input id="q" type="search" placeholder="搜名字，比如 Agnes、Grok、16688…" autocomplete="off" /></div>
+      <div class="chips" id="chips"></div>
+      <main id="main"></main>
+
+      <footer>
+        <span>收录于 2026-11-20，链接以各官网最新状态为准。</span><br />
+        <span>收藏夹里还有一部分只看得到名字、看不到网址（TokenForge、Models、AI 模型、老王API 里的 BAI / AIHubMix / Radeon 云 / Token Harbor / Y-API / Coarena / 老王导航、工具箱里的临时邮箱 / 接码平台、影视站），发我链接就补进来。</span><br />
+        <span>域名 myfreetool.eu.cc 有效期至 2027-11-20，免费续费须在到期前 90 天内操作。</span>
+      </footer>
+    </div>
+
+    <script>
+      var SITES = [
+        /* ---------- 常用 ---------- */
+        { name:"GitHub", domain:"github.com", url:"https://github.com", cat:"common",
+          desc:"代码仓库与开源项目，找工具、看项目都在这。" },
+        { name:"YouTube", domain:"youtube.com", url:"https://www.youtube.com", cat:"common",
+          desc:"视频站，教程和直播回放都在这。" },
+        { name:"X", domain:"x.com", url:"https://x.com", cat:"common",
+          desc:"看 AI 圈动态和新工具首发最快的地方。" },
+
+        /* ---------- 免费 API ---------- */
+        { name:"NVIDIA NIM", domain:"build.nvidia.com", url:"https://build.nvidia.com", cat:"api",
+          desc:"英伟达官方推理平台，模型阵容最全之一，免费注册领 Key 就能调，兼容 OpenAI 格式。" },
+        { name:"Agnes AI", domain:"agnes-ai.com", url:"https://agnes-ai.com", cat:"api",
+          desc:"新加坡自研模型的三合一免费 API：文本、图片、视频一个 Key 全调通，Flash 模型目前 $0、不用绑卡。" },
+        { name:"硅基流动 SiliconFlow", domain:"siliconflow.cn", url:"https://siliconflow.cn", cat:"api",
+          desc:"国产推理云平台，聚合多款主流开源模型，国内直连，站内有专门的免费模型。" },
+        { name:"TokenRouter", domain:"tokenrouter.com", url:"https://www.tokenrouter.com", cat:"api",
+          desc:"一个 Key 聚合 100+ 模型的 API 中转站，OpenAI / Claude / Gemini 三种格式都能接，站内有 $0 免费模型路线。" },
+        { name:"LMSpeed", domain:"lmspeed.net", url:"https://lmspeed.net", cat:"code",
+          desc:"免费的 LLM API 比价测速站：100+ 家渠道的价格、速度、可用率放一起比，选 API 中转前先查一眼，免注册。" },
+        { name:"Free-LLM 免费 API 目录", domain:"free-llm.com", url:"https://free-llm.com", cat:"code",
+          desc:"免费 LLM API 的大目录：40+ 家永久免费档、试用额度按额度、限速、模型列成表，附各家 Key 领取页。" },
+
+        /* ---------- AI 对话 ---------- */
+        { name:"ChatGPT", domain:"chatgpt.com", url:"https://chatgpt.com", cat:"chat",
+          desc:"免费档能对话、能生图（有限额），综合能力仍是第一梯队。" },
+        { name:"豆包", domain:"doubao.com", url:"https://www.doubao.com", cat:"chat",
+          desc:"字节的免费对话入口，中文写作和办公场景顺手，国内直连。" },
+        { name:"Grok", domain:"grok.com", url:"https://grok.com", cat:"chat",
+          desc:"xAI 的对话入口，免费档能对话、联网查实时信息、能生图，X 账号直接登录。" },
+        { name:"Arena AI（LMArena）", domain:"lmarena.ai", url:"https://lmarena.ai", cat:"chat",
+          desc:"大模型竞技场：两个模型匿名对打、你投票选哪个答得好，免注册免费试用各家前沿模型，还能看公开排行榜。" },
+        { name:"Microsoft Copilot", domain:"copilot.microsoft.com", url:"https://copilot.microsoft.com", cat:"chat",
+          desc:"微软的免费对话入口，微软账号登录就能用，对话、写东西、联网查资料都行。" },
+        { name:"Muse", domain:"claude.ai", url:"https://claude.ai", cat:"chat",
+          desc:"Anthropic 的对话入口，免费档能对话、写代码、读文档，写作和长文是强项。" },
+
+        /* ---------- API 中转 ---------- */
+        { name:"OpenRouter", domain:"openrouter.ai", url:"https://openrouter.ai", cat:"api",
+          desc:"一个 Key 聚合各家模型的「总台」，同一接口切换不同模型，站内带 :free 后缀的模型免费用。" },
+
+        /* ---------- 公益 API（后台直达） ---------- */
+        { name:"星驰API公益站", domain:"xingchiapi.com", url:"https://xingchiapi.com/dashboard", cat:"api",
+          desc:"公益 API 站，后台直达。仅 gpt-6-astra、gpt-6.1-sol 两个模型、无 Claude；注册后额度为 0，需去 TG 机器人 @xingchi66bot 领兑换码。" },
+        { name:"福利站 apikey.casa", domain:"apikey.casa", url:"https://apikey.casa/dashboard", cat:"api",
+          desc:"订阅转 API 平台，后台直达。登录后看余额、模型和 Key，额度与模型以站内实时显示为准。" },
+        { name:"100milionseek", domain:"100milionseek.top", url:"https://100milionseek.top/dashboard", cat:"api",
+          desc:"公益 API 站，后台直达（注意拼写：milion 少一个 l）。2026-11-20 站方公告：新注册暂停、部分请求失败、正在扩容，以站内为准。" },
+
+        /* ---------- 代充 ---------- */
+        { name:"16688", domain:"16688.com.cn", url:"https://16688.com.cn", cat:"topup",
+          desc:"代充平台首页；我的小店「ai代理」也在上面，Muse 邀请助力与 GPT Codex Plus 充值套餐在售。" }
+      ];
+
+      var CATS = [
+        { id:"all", label:"全部" },
+        { id:"common", label:"常用" },
+        { id:"api", label:"免费 API" },
+        { id:"chat", label:"AI 对话" },
+        { id:"code", label:"工具 / 目录" },
+        { id:"topup", label:"代充" }
+      ];
+      var state = { cat:"all", q:"" };
+
+      function render(){
+        var chips = document.getElementById("chips");
+        chips.innerHTML = "";
+        CATS.forEach(function(c){
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = c.label + (c.id === "all" ? "（" + SITES.length + "）" : "");
+          if (state.cat === c.id) b.className = "on";
+          b.onclick = function(){ state.cat = c.id; render(); };
+          chips.appendChild(b);
+        });
+
+        var main = document.getElementById("main");
+        main.innerHTML = "";
+        var q = state.q.trim().toLowerCase();
+        CATS.filter(function(c){ return c.id !== "all"; }).forEach(function(c){
+          var list = SITES.filter(function(s){
+            if (s.cat !== c.id) return false;
+            if (state.cat !== "all" && state.cat !== c.id) return false;
+            if (q && (s.name + s.domain + s.desc).toLowerCase().indexOf(q) === -1) return false;
+            return true;
+          });
+          if (!list.length) return;
+          var h = document.createElement("h2");
+          h.innerHTML = c.label + "<small>" + list.length + " 个</small>";
+          main.appendChild(h);
+          var g = document.createElement("div");
+          g.className = "grid";
+          list.forEach(function(s){
+            var a = document.createElement("a");
+            a.className = "card";
+            a.href = s.url;
+            a.target = "_blank";
+            a.rel = "noopener";
+            var b = document.createElement("b");
+            b.textContent = s.name;
+            var d = document.createElement("span");
+            d.className = "d";
+            d.textContent = s.desc;
+            var u = document.createElement("span");
+            u.className = "u";
+            u.textContent = s.domain;
+            a.appendChild(b); a.appendChild(d); a.appendChild(u);
+            g.appendChild(a);
+          });
+          main.appendChild(g);
+        });
+        if (!main.children.length){
+          var p = document.createElement("p");
+          p.textContent = "没找到，换个关键词试试。";
+          main.appendChild(p);
+        }
+      }
+
+      document.getElementById("q").addEventListener("input", function(e){
+        state.q = e.target.value;
+        render();
+      });
+      render();
+    </script>
+  </body>
+</html>
